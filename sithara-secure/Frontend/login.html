@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sithara Admin Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --charcoal: #4a5e4b;
+      --text-dark: #2c3a1e;
+      --text-mid: #4a5e3a;
+      --gold: #c9973a;
+      --gold-light: #e8b84b;
+      --cream: #f5efe6;
+      --cream-dim: #c8b99a;
+      --bg: #2c3d2e;
+    }
+    body {
+      min-height: 100vh;
+      background: #d6e2ba;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Sans', sans-serif;
+    }
+ 
+    .login-card {
+      background: #3d5240;
+      border: 1px solid rgba(201,151,58,0.4);
+      border-radius: 12px;
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 400px;
+      backdrop-filter: blur(10px);
+    }
+ 
+    .login-logo {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .login-logo-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      color: var(--cream);
+      letter-spacing: 0.04em;
+    }
+    .login-logo-title span { color: var(--gold); }
+    .login-logo-sub {
+      font-size: 0.75rem;
+      color: var(--cream-dim);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-top: 6px;
+    }
+ 
+    .form-group { margin-bottom: 18px; }
+    .form-group label {
+      display: block;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--cream-dim);
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(201,151,58,0.3);
+      border-radius: 6px;
+      color: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus { border-color: var(--gold); }
+    .form-group input::placeholder { color: rgba(200,185,154,0.4); }
+ 
+    .error-msg {
+      display: none;
+      background: rgba(220,53,69,0.12);
+      border: 1px solid rgba(220,53,69,0.3);
+      color: #ff6b6b;
+      font-size: 0.8rem;
+      padding: 10px 14px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+ 
+    .btn-login {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      border: none;
+      border-radius: 6px;
+      color: #2c3d2e;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s;
+      margin-top: 8px;
+    }
+    .btn-login:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-login:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+ 
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.78rem;
+      color: var(--cream-dim);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--gold); }
+  </style>
+</head>
+<body>
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-logo-title">SITH<span>ARA</span></div>
+      <div class="login-logo-sub">Admin Panel</div>
+    </div>
+ 
+    <div class="error-msg" id="errorMsg"></div>
+ 
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" id="username" placeholder="Enter username" autofocus/>
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="Enter password" onkeydown="if(event.key==='Enter') login()"/>
+    </div>
+ 
+    <button class="btn-login" id="loginBtn" onclick="login()">Login</button>
+    <a href="/" class="back-link">&#8592; Back to website</a>
+  </div>
+ 
+  <script>
+    async function login() {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const errorEl  = document.getElementById('errorMsg');
+      const btn      = document.getElementById('loginBtn');
+ 
+      if (!username || !password) {
+        showError('Please enter username and password.');
+        return;
+      }
+ 
+      btn.disabled = true;
+      btn.textContent = 'Logging in...';
+      errorEl.style.display = 'none';
+ 
+      try {
+        const res  = await fetch('/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+        if (data.success) {
+          window.location.href = '/admin';
+        } else {
+          showError(data.message || 'Invalid credentials.');
+        }
+      } catch(e) {
+        showError('Could not connect to server.');
+      }
+ 
+      btn.disabled = false;
+      btn.textContent = 'Login';
+    }
+ 
+    function showError(msg) {
+      const el = document.getElementById('errorMsg');
+      el.textContent = msg;
+      el.style.display = 'block';
+    }
+  </script>
+</body>
+</html>

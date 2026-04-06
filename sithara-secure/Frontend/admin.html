@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sithara Admin Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+    :root {
+      --bg:           #d6e2ba;
+      --bg-card:      #e2e9cb;
+      --bg-hover:     #cbd5a2;
+      --border:       rgba(0,0,0,0.08);
+      --gold:         #8a6520;
+      --gold-light:   #b5892f;
+      --green:        #3e5c36;
+      --green-light:  #4a8a3a;
+      --sky:          #2a7da3;
+      --red:          #a93226;
+      --orange:       #b35d10;
+      --text-main:    #1a2a1b;
+      --text-muted:   #5a6a5c;
+      --white:        #ffffff;
+    }
+ 
+    html { scroll-behavior: smooth; }
+ 
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      min-height: 100vh;
+    }
+ 
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--green); border-radius: 3px; }
+ 
+    /* ── SIDEBAR ── */
+    .sidebar {
+      position: fixed; top: 0; left: 0;
+      width: 240px; height: 100vh;
+      background: var(--bg-card);
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      padding: 30px 0;
+      z-index: 100;
+      box-shadow: 4px 0 15px rgba(0,0,0,0.03);
+    }
+ 
+    .sidebar-logo {
+      padding: 0 24px 30px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+ 
+    .sidebar-logo h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem; color: var(--gold);
+      letter-spacing: 0.05em;
+    }
+ 
+    .sidebar-logo p {
+      font-size: 0.7rem; color: var(--text-muted);
+      letter-spacing: 0.15em; text-transform: uppercase;
+      margin-top: 3px;
+    }
+ 
+    .nav-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 24px; cursor: pointer;
+      color: var(--text-main); font-size: 0.85rem; font-weight: 500;
+      transition: all 0.2s; border-left: 3px solid transparent;
+      text-decoration: none;
+    }
+ 
+    .nav-item:hover { background: var(--bg-hover); color: var(--gold); }
+ 
+    .nav-item.active {
+      background: var(--bg-hover);
+      color: var(--gold);
+      border-left-color: var(--gold);
+    }
+ 
+    .nav-icon { font-size: 1.1rem; width: 20px; text-align: center; }
+ 
+    .sidebar-footer {
+      margin-top: auto; padding: 20px 24px;
+      border-top: 1px solid var(--border);
+      font-size: 0.72rem; color: var(--text-muted);
+    }
+ 
+    /* ── MAIN ── */
+    .main {
+      margin-left: 240px;
+      padding: 40px;
+      min-height: 100vh;
+    }
+ 
+    /* ── TOPBAR ── */
+    .topbar {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 36px;
+    }
+ 
+    .topbar-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem; color: var(--text-main);
+    }
+ 
+    .topbar-title span { color: var(--gold); }
+ 
+    .topbar-right { display: flex; align-items: center; gap: 14px; }
+ 
+    .refresh-btn {
+      background: var(--white);
+      border: 1px solid var(--border);
+      color: var(--text-main); padding: 8px 18px;
+      border-radius: 4px; cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem; font-weight: 500;
+      transition: all 0.2s; letter-spacing: 0.05em;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+ 
+    .refresh-btn:hover { background: var(--bg-hover); }
+ 
+    .live-badge {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.72rem; color: var(--green);
+      letter-spacing: 0.1em; text-transform: uppercase;
+      font-weight: 600;
+    }
+ 
+    .live-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--green);
+      animation: pulse 2s infinite;
+    }
+ 
+    @keyframes pulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: 0.5; transform: scale(1.3); }
+    }
+ 
+    /* ── STAT CARDS ── */
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 18px; margin-bottom: 36px;
+    }
+ 
+    .stat-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 8px; padding: 22px 24px;
+      position: relative; overflow: hidden;
+      transition: border-color 0.3s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    }
+ 
+    .stat-card:hover { border-color: rgba(138,101,32,0.3); }
+ 
+    .stat-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    }
+ 
+    .stat-card.gold::before   { background: linear-gradient(90deg, var(--gold), transparent); }
+    .stat-card.green::before  { background: linear-gradient(90deg, var(--green-light), transparent); }
+    .stat-card.sky::before    { background: linear-gradient(90deg, var(--sky), transparent); }
+    .stat-card.orange::before { background: linear-gradient(90deg, var(--orange), transparent); }
+ 
+    .stat-label {
+      font-size: 0.68rem; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+ 
+    .stat-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem; font-weight: 700;
+      color: var(--text-main); line-height: 1;
+    }
+ 
+    .stat-icon {
+      position: absolute; top: 20px; right: 20px;
+      font-size: 1.6rem; opacity: 0.15;
+    }
+ 
+    /* ── SECTION TABS ── */
+    .section { display: none; }
+    .section.active { display: block; }
+ 
+    /* ── TABLE ── */
+    .table-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 8px; overflow: hidden;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    }
+ 
+    .table-header {
+      padding: 20px 24px;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+ 
+    .table-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem; color: var(--text-main);
+    }
+ 
+    .table-header h2 span { color: var(--gold); font-size: 0.85rem; margin-left: 8px; }
+ 
+    .search-input {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 4px; color: var(--text-main);
+      padding: 7px 14px; font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem; outline: none;
+      transition: border-color 0.3s; width: 200px;
+    }
+ 
+    .search-input:focus { border-color: rgba(138,101,32,0.4); }
+    .search-input::placeholder { color: var(--text-muted); }
+ 
+    table { width: 100%; border-collapse: collapse; }
+ 
+    th {
+      padding: 12px 20px; text-align: left;
+      font-size: 0.65rem; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--text-muted);
+      background: #f4f7eb;
+      border-bottom: 2px solid var(--border);
+      font-weight: 600;
+    }
+ 
+    td {
+      padding: 14px 20px; font-size: 0.82rem;
+      color: var(--text-main);
+      border-bottom: 1px solid #f0f0f0;
+    }
+ 
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #f9fbf2; }
+ 
+    .td-name { color: var(--text-main); font-weight: 500; }
+    .td-id { color: var(--text-muted); font-size: 0.75rem; }
+ 
+    .delete-btn { background: transparent; border: 1px solid rgba(220,53,69,0.4); color: #dc3545; font-size: 0.7rem; padding: 4px 10px; border-radius: 4px; cursor: pointer; transition: all 0.2s; }
+    .delete-btn:hover { background: rgba(220,53,69,0.15); border-color: #dc3545; }
+    /* status badges */
+    .badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 10px; border-radius: 20px;
+      font-size: 0.68rem; font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+    }
+ 
+    .badge-pending   { background: rgba(179,93,16,0.12);  color: var(--orange); border: 1px solid rgba(179,93,16,0.3); }
+    .badge-confirmed { background: rgba(62,92,54,0.12);   color: var(--green);  border: 1px solid rgba(62,92,54,0.3); }
+    .badge-delivered { background: rgba(42,125,163,0.12); color: var(--sky);    border: 1px solid rgba(42,125,163,0.3); }
+ 
+    .badge::before { content: '●'; font-size: 0.5rem; }
+ 
+    /* action buttons */
+    .action-btn {
+      background: var(--white);
+      border: 1px solid var(--border);
+      color: var(--text-main); padding: 5px 12px;
+      border-radius: 4px; cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.72rem; transition: all 0.2s;
+      margin-right: 4px;
+    }
+ 
+    .action-btn:hover { background: var(--bg-hover); color: var(--text-main); border-color: rgba(138,101,32,0.3); }
+    .action-btn.danger:hover { background: rgba(169,50,38,0.1); color: var(--red); border-color: rgba(169,50,38,0.3); }
+ 
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      text-align: center; padding: 60px 20px;
+      color: var(--text-muted);
+    }
+ 
+    .empty-state-icon { font-size: 2.5rem; margin-bottom: 12px; opacity: 0.4; }
+    .empty-state p { font-size: 0.85rem; }
+ 
+    /* ── LOADING ── */
+    .loading {
+      text-align: center; padding: 40px;
+      color: var(--text-muted); font-size: 0.85rem;
+    }
+ 
+    /* ── TOAST ── */
+    .toast {
+      position: fixed; bottom: 30px; left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--text-main);
+      color: var(--white);
+      padding: 12px 24px;
+      border-radius: 4px; font-size: 0.82rem;
+      z-index: 9999; opacity: 0;
+      transition: opacity 0.4s, transform 0.4s;
+      pointer-events: none;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+ 
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+ 
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1100px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+ 
+    @media (max-width: 768px) {
+      .sidebar { width: 200px; }
+      .main { margin-left: 200px; padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+ 
+  <!-- ══════════ SIDEBAR ══════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <h1>Sithara</h1>
+      <p>Admin Panel</p>
+    </div>
+ 
+    <a class="nav-item active" onclick="showSection('dashboard')" href="#">
+      <span class="nav-icon">📊</span> Dashboard
+    </a>
+    <a class="nav-item" onclick="showSection('bookings')" href="#">
+      <span class="nav-icon">🗓️</span> Bookings
+    </a>
+    <a class="nav-item" onclick="showSection('orders')" href="#">
+      <span class="nav-icon">🛒</span> Orders
+    </a>
+    <a class="nav-item" onclick="showSection('menu')" href="#">
+      <span class="nav-icon">🍽️</span> Menu
+    </a>
+    <a class="nav-item" onclick="showSection('messages')" href="#">
+      <span class="nav-icon">✉️</span> Messages
+    </a>
+    <a class="nav-item" href="/" target="_blank">
+      <span class="nav-icon">🌐</span> View Website
+    </a>
+ 
+    <div class="sidebar-footer">
+      Sithara Restaurant © 2025
+    </div>
+  </aside>
+ 
+  <!-- ══════════ MAIN ══════════ -->
+  <main class="main">
+ 
+    <div class="topbar">
+      <div>
+        <div class="topbar-title">Good day, <span>Admin</span> 👋</div>
+      </div>
+      <div class="topbar-right">
+        <div class="live-badge"><div class="live-dot"></div> Live</div>
+        <button class="refresh-btn" onclick="loadAll()">↻ Refresh</button>
+        <a href="/admin/logout" style="font-size:0.75rem;color:var(--cream-dim);text-decoration:none;padding:6px 14px;border:1px solid rgba(255,255,255,0.15);border-radius:4px;transition:all 0.2s;" onmouseover="this.style.borderColor='#dc3545';this.style.color='#dc3545'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)';this.style.color='var(--cream-dim)'">Logout</a>
+      </div>
+    </div>
+ 
+    <!-- ── DASHBOARD SECTION ── -->
+    <div class="section active" id="section-dashboard">
+      <div class="stats-grid">
+        <div class="stat-card gold">
+          <div class="stat-label">Total Bookings</div>
+          <div class="stat-value" id="stat-bookings">—</div>
+          <div class="stat-icon">🗓️</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-label">Total Orders</div>
+          <div class="stat-value" id="stat-orders">—</div>
+          <div class="stat-icon">🛒</div>
+        </div>
+        <div class="stat-card sky">
+          <div class="stat-label">Menu Items</div>
+          <div class="stat-value" id="stat-menu">—</div>
+          <div class="stat-icon">🍽️</div>
+        </div>
+        <div class="stat-card orange">
+          <div class="stat-label">Messages</div>
+          <div class="stat-value" id="stat-messages">—</div>
+          <div class="stat-icon">✉️</div>
+        </div>
+      </div>
+ 
+      <!-- Recent Bookings -->
+      <div class="table-card">
+        <div class="table-header">
+          <h2>Recent Bookings <span id="recent-bookings-count"></span></h2>
+        </div>
+        <div id="recent-bookings-table"><div class="loading">Loading...</div></div>
+      </div>
+ 
+      <!-- Recent Orders -->
+      <div class="table-card">
+        <div class="table-header">
+          <h2>Recent Orders <span id="recent-orders-count"></span></h2>
+        </div>
+        <div id="recent-orders-table"><div class="loading">Loading...</div></div>
+      </div>
+    </div>
+ 
+    <!-- ── BOOKINGS SECTION ── -->
+    <div class="section" id="section-bookings">
+      <div class="table-card">
+        <div class="table-header">
+          <h2>All Bookings <span id="bookings-count"></span></h2>
+          <input class="search-input" type="text" placeholder="🔍 Search..." oninput="filterTable('bookings-body', this.value)" />
+        </div>
+        <div id="bookings-table"><div class="loading">Loading...</div></div>
+      </div>
+    </div>
+ 
+    <!-- ── ORDERS SECTION ── -->
+    <div class="section" id="section-orders">
+      <div class="table-card">
+        <div class="table-header">
+          <h2>All Orders <span id="orders-count"></span></h2>
+          <input class="search-input" type="text" placeholder="🔍 Search..." oninput="filterTable('orders-body', this.value)" />
+        </div>
+        <div id="orders-table"><div class="loading">Loading...</div></div>
+      </div>
+    </div>
+ 
+    <!-- ── MENU SECTION ── -->
+    <div class="section" id="section-menu">
+      <div class="table-card">
+        <div class="table-header">
+          <h2>Menu Items <span id="menu-count"></span></h2>
+          <input class="search-input" type="text" placeholder="🔍 Search..." oninput="filterTable('menu-body', this.value)" />
+        </div>
+        <div id="menu-table"><div class="loading">Loading...</div></div>
+      </div>
+    </div>
+ 
+    <!-- ── MESSAGES SECTION ── -->
+    <div class="section" id="section-messages">
+      <div class="table-card">
+        <div class="table-header">
+          <h2>Contact Messages <span id="messages-count"></span></h2>
+          <input class="search-input" type="text" placeholder="🔍 Search..." oninput="filterTable('messages-body', this.value)" />
+        </div>
+        <div id="messages-table"><div class="loading">Loading...</div></div>
+      </div>
+    </div>
+ 
+  </main>
+ 
+  <div class="toast" id="toast"></div>
+ 
+  <script>
+    const API = '';  // relative — works on any host
+ 
+    /* ── Section switcher ── */
+    function showSection(name) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      document.getElementById('section-' + name).classList.add('active');
+      event.currentTarget.classList.add('active');
+    }
+ 
+    /* ── Toast ── */
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+ 
+    /* ── Search filter ── */
+    function filterTable(tbodyId, query) {
+      const tbody = document.getElementById(tbodyId);
+      if (!tbody) return;
+      const rows = tbody.querySelectorAll('tr');
+      rows.forEach(row => {
+        row.style.display = row.textContent.toLowerCase().includes(query.toLowerCase()) ? '' : 'none';
+      });
+    }
+ 
+    /* ── Render helpers ── */
+    function emptyState(msg) {
+      return `<div class="empty-state"><div class="empty-state-icon">📭</div><p>${msg}</p></div>`;
+    }
+ 
+    function statusBadge(status) {
+      return `<span class="badge badge-${status}">${status}</span>`;
+    }
+ 
+    /* ── Load Bookings ── */
+    async function loadBookings() {
+      const res  = await fetch(`${API}/api/bookings`);
+      const data = await res.json();
+      const rows = data.data;
+ 
+      document.getElementById('stat-bookings').textContent   = rows.length;
+      document.getElementById('bookings-count').textContent  = `(${rows.length})`;
+      document.getElementById('recent-bookings-count').textContent = `(${rows.slice(0,5).length})`;
+ 
+      const buildTable = (list) => {
+        if (!list.length) return emptyState('No bookings yet.');
+        return `<table>
+          <thead><tr>
+            <th>#</th><th>Name</th><th>Phone</th><th>Date</th><th>Time</th><th>Guests</th><th>Received</th><th>Actions</th>
+          </tr></thead>
+          <tbody id="bookings-body">
+            ${list.map(b => `<tr>
+              <td class="td-id">#${b.id}</td>
+              <td class="td-name">${b.full_name}</td>
+              <td>${b.phone}</td>
+              <td>${b.date}</td>
+              <td>${b.time}</td>
+              <td>${b.guests}</td>
+              <td>${b.created_at ? b.created_at.split('.')[0] : '—'}</td>
+              <td><button class="delete-btn" onclick="deleteRecord('booking', ${b.id})">Delete</button></td>
+            </tr>`).join('')}
+          </tbody>
+        </table>`;
+      };
+ 
+      document.getElementById('bookings-table').innerHTML        = buildTable(rows);
+      document.getElementById('recent-bookings-table').innerHTML = buildTable(rows.slice(0, 5));
+    }
+ 
+    /* ── Load Orders ── */
+    async function loadOrders() {
+      const res  = await fetch(`${API}/api/orders`);
+      const data = await res.json();
+      const rows = data.data;
+ 
+      document.getElementById('stat-orders').textContent  = rows.length;
+      document.getElementById('orders-count').textContent = `(${rows.length})`;
+      document.getElementById('recent-orders-count').textContent = `(${rows.slice(0,5).length})`;
+ 
+      const buildTable = (list) => {
+        if (!list.length) return emptyState('No orders yet.');
+        return `<table>
+          <thead><tr>
+            <th>#</th><th>Name</th><th>Phone</th><th>Address</th><th>Items</th><th>Status</th><th>Received</th><th>Action</th>
+          </tr></thead>
+          <tbody id="orders-body">
+            ${list.map(o => `<tr>
+              <td class="td-id">#${o.id}</td>
+              <td class="td-name">${o.full_name}</td>
+              <td>${o.phone}</td>
+              <td>${o.address}</td>
+              <td>${o.items}</td>
+              <td>${statusBadge(o.status)}</td>
+              <td>${o.created_at ? o.created_at.split('.')[0] : '—'}</td>
+              <td>
+                <button class="action-btn" onclick="updateStatus(${o.id}, 'confirmed')">Confirm</button>
+                <button class="action-btn" onclick="updateStatus(${o.id}, 'delivered')">Delivered</button>
+                <button class="delete-btn" onclick="deleteRecord('order', ${o.id})">Delete</button>
+              </td>
+            </tr>`).join('')}
+          </tbody>
+        </table>`;
+      };
+ 
+      document.getElementById('orders-table').innerHTML        = buildTable(rows);
+      document.getElementById('recent-orders-table').innerHTML = buildTable(rows.slice(0, 5));
+    }
+ 
+    /* ── Update Order Status ── */
+    async function updateStatus(id, status) {
+      const res  = await fetch(`${API}/api/order/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(`✅ Order #${id} marked as ${status}`);
+        loadOrders();
+      }
+    }
+ 
+    /* ── Delete Record ── */
+    async function deleteRecord(type, id) {
+      if (!confirm(`Are you sure you want to delete this ${type}?`)) return;
+      const endpoints = { order: 'order', booking: 'booking', message: 'contact' };
+      const res  = await fetch(`${API}/api/${endpoints[type]}/${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (data.success) {
+        showToast(`✅ ${type.charAt(0).toUpperCase() + type.slice(1)} deleted.`);
+        if (type === 'order')   loadOrders();
+        if (type === 'booking') loadBookings();
+        if (type === 'message') loadMessages();
+      } else {
+        alert('Error: ' + data.message);
+      }
+    }
+ 
+    /* ── Load Menu ── */
+    async function loadMenu() {
+      const res  = await fetch(`${API}/api/menu`);
+      const data = await res.json();
+      const rows = data.data;
+ 
+      document.getElementById('stat-menu').textContent  = rows.length;
+      document.getElementById('menu-count').textContent = `(${rows.length})`;
+ 
+      if (!rows.length) {
+        document.getElementById('menu-table').innerHTML = emptyState('No menu items.');
+        return;
+      }
+ 
+      document.getElementById('menu-table').innerHTML = `<table>
+        <thead><tr>
+          <th>#</th><th>Name</th><th>Category</th><th>Price</th><th>Description</th>
+        </tr></thead>
+        <tbody id="menu-body">
+          ${rows.map(m => `<tr>
+            <td class="td-id">#${m.id}</td>
+            <td class="td-name">${m.name}</td>
+            <td><span class="badge badge-confirmed">${m.category}</span></td>
+            <td>₹${m.price}</td>
+            <td>${m.description || '—'}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>`;
+    }
+ 
+    /* ── Load Messages ── */
+    async function loadMessages() {
+      const res  = await fetch(`${API}/api/contact`);
+      const data = await res.json();
+      const rows = data.data;
+ 
+      document.getElementById('stat-messages').textContent  = rows.length;
+      document.getElementById('messages-count').textContent = `(${rows.length})`;
+ 
+      if (!rows.length) {
+        document.getElementById('messages-table').innerHTML = emptyState('No messages yet.');
+        return;
+      }
+ 
+      document.getElementById('messages-table').innerHTML = `<table>
+        <thead><tr>
+          <th>#</th><th>Name</th><th>Email</th><th>Message</th><th>Received</th>
+        </tr></thead>
+        <tbody id="messages-body">
+          ${rows.map(m => `<tr>
+            <td class="td-id">#${m.id}</td>
+            <td class="td-name">${m.full_name}</td>
+            <td>${m.email}</td>
+            <td>${m.message}</td>
+            <td>${m.created_at ? m.created_at.split('.')[0] : '—'}</td>
+            <td><button class="delete-btn" onclick="deleteRecord('message', ${m.id})">Delete</button></td>
+          </tr>`).join('')}
+        </tbody>
+      </table>`;
+    }
+ 
+    /* ── Load all ── */
+    async function loadAll() {
+      await Promise.all([loadBookings(), loadOrders(), loadMenu(), loadMessages()]);
+    }
+ 
+    /* ── Init ── */
+    loadAll();
+    setInterval(loadAll, 30000);
+  </script>
+</body>
+</html>

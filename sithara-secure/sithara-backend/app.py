@@ -87,9 +87,11 @@ def handle_rate_limit(e):
  
  
 @app.route('/')
-def index():
-    return send_from_directory('..', 'index.html')
- 
+def home():
+    return "Backend is running 🚀"
+ @app.route("/api")
+def api():
+    return {"message": "API working"}
 @app.route('/images/<path:filename>')
 def images(filename):
     return send_from_directory('../images', filename)

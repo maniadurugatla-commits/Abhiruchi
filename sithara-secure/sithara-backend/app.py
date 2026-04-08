@@ -89,7 +89,7 @@ def handle_rate_limit(e):
 @app.route('/')
 def home():
     return "Backend is running 🚀"
- @app.route("/api")
+@app.route("/api")
 def api():
     return {"message": "API working"}
 @app.route('/images/<path:filename>')

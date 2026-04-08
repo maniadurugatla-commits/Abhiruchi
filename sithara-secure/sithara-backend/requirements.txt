@@ -4,3 +4,4 @@ flask-limiter
 python-dotenv
 twilio
 werkzeug
+gunicorn

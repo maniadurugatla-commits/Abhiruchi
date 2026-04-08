@@ -27,7 +27,7 @@ app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 app.config['SESSION_COOKIE_SECURE']   = os.environ.get('FLASK_ENV') == 'production'
  
 # ── CORS: restrict to configured origin only ──
-_allowed_origin = os.environ.get('ALLOWED_ORIGIN', 'http://localhost:5000')
+_allowed_origin = os.environ.get('ALLOWED_ORIGIN', 'https://abhiruchi-zeta.vercel.app')
 CORS(app, origins=[_allowed_origin])
  
 # ── Rate Limiting ──

@@ -129,9 +129,8 @@ def admin_login():
 def admin_logout():
     session.clear()
     return redirect('/login')
- 
- 
+
+init_db()
 if __name__ == '__main__':
-    init_db()
     debug_mode = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
     app.run(debug=debug_mode, port=5000)

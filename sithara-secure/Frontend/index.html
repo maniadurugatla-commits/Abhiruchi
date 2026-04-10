@@ -266,6 +266,9 @@
 #home { min-height: 80vh; }
 .hero-content { padding: 0 20px; margin: 0 auto; text-align: center; }
 .hero-actions { justify-content: center; }
+     #admin-btn { display: none; }
+.nav-logo-text { font-size: 0.95rem; }
+.nav-order, .nav-cta { padding: 8px 12px !important; font-size: 0.65rem !important; }
     }
     @media (max-width: 540px) {
       .gallery-grid { grid-template-columns: 1fr; }
@@ -488,9 +491,9 @@ body {
       <li><a href="#contact">Contact</a></li>
     </ul>
 <div style="display:flex; gap:6px; align-items:center;">
-  <a href="https://abhiruchi.onrender.com/admin" target="_blank" class="nav-order" style="padding:8px 12px; font-size:0.68rem;">Admin</a>
-  <a href="#" class="nav-order" onclick="openOrderModal(); return false;" style="padding:8px 12px; font-size:0.68rem;">Order</a>
-  <a href="#" class="nav-cta" onclick="openModal(); return false;" style="padding:8px 12px; font-size:0.68rem;">Book</a>
+  <a href="https://abhiruchi.onrender.com/admin" target="_blank" class="nav-order" id="admin-btn">Admin</a>
+  <a href="#" class="nav-order" onclick="openOrderModal(); return false;">Order</a>
+  <a href="#" class="nav-cta" onclick="openModal(); return false;">Book</a>
 </div>
     <div class="hamburger" onclick="toggleMenu()" aria-label="Menu">
       <span></span><span></span><span></span>

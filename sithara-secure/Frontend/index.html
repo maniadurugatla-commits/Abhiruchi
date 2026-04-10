@@ -261,6 +261,11 @@
       .footer-grid { grid-template-columns: 1fr; gap: 40px; }
       .hero-plate { display: none; }
       .hero-content { padding: 0 30px; }
+     .hero-plate { display: none !important; }
+.hero-ring { display: none; }
+#home { min-height: 80vh; }
+.hero-content { padding: 0 20px; margin: 0 auto; text-align: center; }
+.hero-actions { justify-content: center; }
     }
     @media (max-width: 540px) {
       .gallery-grid { grid-template-columns: 1fr; }
@@ -482,11 +487,11 @@ body {
       <li><a href="#gallery">Gallery</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
-    <div style="display:flex; gap:8px; align-items:center;">
-     <a href="https://abhiruchi.onrender.com/admin" target="_blank" class="nav-order">Admin</a>
-      <a href="#" class="nav-order" onclick="openOrderModal(); return false;">Order Now</a>
-      <a href="#" class="nav-cta" onclick="openModal(); return false;">Book a Table</a>
-    </div>
+<div style="display:flex; gap:6px; align-items:center;">
+  <a href="https://abhiruchi.onrender.com/admin" target="_blank" class="nav-order" style="padding:8px 12px; font-size:0.68rem;">Admin</a>
+  <a href="#" class="nav-order" onclick="openOrderModal(); return false;" style="padding:8px 12px; font-size:0.68rem;">Order</a>
+  <a href="#" class="nav-cta" onclick="openModal(); return false;" style="padding:8px 12px; font-size:0.68rem;">Book</a>
+</div>
     <div class="hamburger" onclick="toggleMenu()" aria-label="Menu">
       <span></span><span></span><span></span>
     </div>

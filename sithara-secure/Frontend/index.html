@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sithara Restaurant</title>
+  <title>Abhiruchi Restaurant</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -265,8 +265,8 @@
     .modal-backdrop.active { display: flex; }
     .modal { background: var(--olive-base); border: 1px solid rgba(181,137,47,0.25); border-radius: 6px; padding: 50px; max-width: 480px; width: 90%; position: relative; box-shadow: 0 40px 100px rgba(0,0,0,0.3); animation: modalIn 0.3s ease; }
     @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-    .modal-close { position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.4rem; line-height: 1; transition: color 0.2s; padding: 4px; }
-    .modal-close:hover { color: var(--charcoal); }
+   .modal-close { position: absolute; top: 16px; right: 16px; background: rgba(0,0,0,0.15); border: 1px solid rgba(0,0,0,0.2); color: #1a2a1b; cursor: pointer; font-size: 1.4rem; line-height: 1; transition: color 0.2s, background 0.2s; padding: 4px; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; }
+.modal-close:hover { background: rgba(0,0,0,0.25); color: #000; }
     .modal-title { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--charcoal); margin-bottom: 8px; }
     .modal-sub { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 32px; }
     .order-item-row { display:flex; align-items:center; justify-content:space-between; background:rgba(255,255,255,0.4); border:1px solid rgba(181,137,47,0.2); border-radius:6px; padding:8px 12px; }
@@ -309,6 +309,18 @@
       .footer-grid { grid-template-columns: 1fr; gap: 40px; }
       .hero-plate { display: none; }
       .hero-content { padding: 0 30px; }
+      .hero-plate { display: none !important; }
+.hero-plate { display: flex; }
+.hero-plate-1 { width: 70px; height: 70px; right: auto; top: auto; left: 50%; bottom: 60px; transform: translateX(-120px); animation-duration: 8s; }
+.hero-plate-2 { width: 70px; height: 70px; right: auto; top: auto; left: 50%; bottom: 60px; transform: translateX(50px); animation-duration: 6s; }
+.hero-plate-3 { width: 70px; height: 70px; right: auto; top: auto; left: 50%; bottom: 140px; transform: translateX(-35px); animation-duration: 10s; }
+.hero-plate-4 { width: 70px; height: 70px; right: auto; top: auto; left: 50%; bottom: 160px; transform: translateX(-130px); animation-duration: 7s; }
+#home { min-height: 100vh; }
+.hero-content { padding-bottom: 260px; }
+#home { min-height: 80vh; }
+.hero-content { padding: 0 20px; margin: 0 auto; text-align: center; }
+.hero-actions { justify-content: center; }
+      .nav-admin-hide { display: none; }
     }
     @media (max-width: 540px) {
       .gallery-grid { grid-template-columns: 1fr; }
@@ -316,6 +328,10 @@
       .footer-bottom { flex-direction: column; text-align: center; }
       .hero-title { font-size: 2.5rem; }
       .form-row { grid-template-columns: 1fr; }
+      #admin-btn { display: none; }
+.nav-logo-text { font-size: 0.95rem; }
+.nav-order, .nav-cta { padding: 8px 12px !important; font-size: 0.65rem !important; }
+      .nav-links a { color: #1a2a1b !important; }
     }
   </style>
 </head>
@@ -325,7 +341,7 @@
   <!-- ══════════ NAV ══════════ -->
   <nav id="navbar">
     <a class="nav-logo" href="#home">
-      <img src="images/Logo.jpg" alt="Sithara Logo" class="nav-logo-icon" />
+      <img src="images/Logo1.png" alt="Sithara Logo" class="nav-logo-icon" />
       <span class="nav-logo-text"><span>SITHARA</span></span>
     </a>
     <ul class="nav-links">
@@ -334,11 +350,11 @@
       <li><a href="#gallery" onclick="closeMobileMenu()">Gallery</a></li>
       <li><a href="#contact" onclick="closeMobileMenu()">Contact</a></li>
     </ul>
-    <div style="display:flex; gap:8px; align-items:center;">
-      <a href="/admin" target="_blank" class="nav-order">Admin</a>
-      <a href="#" class="nav-order" onclick="openOrderModal(); return false;">Order Now</a>
-      <a href="#" class="nav-cta" onclick="openModal(); return false;">Book a Table</a>
-    </div>
+   <div style="display:flex; gap:6px; align-items:center; margin-left:auto;">
+  <a href="https://abhiruchi.onrender.com/admin" target="_blank" class="nav-order" id="admin-btn">Admin</a>
+  <a href="#" class="nav-order" onclick="openOrderModal(); return false;">Order</a>
+  <a href="#" class="nav-cta" onclick="openModal(); return false;">Book</a>
+</div>
     <!-- FIX 6: hamburger is now a <button> for proper accessibility -->
     <button class="hamburger" onclick="toggleMenu()" aria-label="Toggle navigation menu">
       <span></span><span></span><span></span>
@@ -355,15 +371,14 @@
     <div class="hero-plate hero-plate-3">🍜</div>
     <div class="hero-plate hero-plate-4">🍽️</div>
     <div class="hero-content">
-      <div class="hero-badge">Est. 2026 · Fine Dining</div>
-      <h1 class="hero-title">
-        Eat Smart
-        <em>Stay Sharp</em>
-      </h1>
-      <p class="hero-sub">
-        Where heritage recipes meet modern craft — every dish tells a story steeped in generations of culinary
-        excellence and the finest fresh ingredients.
-      </p>
+<div class="hero-badge">Est. 2010 · Authentic Telugu Cuisine</div>
+<h1 class="hero-title">
+  Taste of
+  <em>Telugu Culture</em>
+</h1>
+<p class="hero-sub">
+  Authentic Telugu flavours crafted with love — from Raikal to your heart. Experience the rich culinary heritage of Telangana at every bite.
+</p>
       <div class="hero-actions">
         <a href="#gallery" class="btn-primary">Explore Our Menu</a>
         <a href="#about" class="btn-ghost">Our Story</a>
@@ -386,8 +401,8 @@
           <img src="images/chef.jpg" alt="Our Chef" style="width:100%; height:100%; object-fit:cover;" />
         </div>
         <div class="about-card-accent">
-          <span class="about-card-accent-num">16+</span>
-          <span class="about-card-accent-label">Years of<br />Excellence</span>
+          <span class="about-card-accent-num">15+</span>
+<span class="about-card-accent-label">Years of<br />Excellence</span>
         </div>
       </div>
       <div class="about-text">
@@ -397,9 +412,9 @@
         </h2>
         <div class="divider reveal reveal-delay-1"></div>
         <p class="about-body reveal reveal-delay-2">
-          Sithara was born from a simple belief — that great food is an act of love. Since 2008, our chefs have honoured
-          time-tested family recipes while embracing the finest seasonal produce. Every dish on our menu is a bridge
-          between the comfort of tradition and the thrill of discovery.
+           Abhiruchi was born from a simple belief — that great food is an act of love. Since 2010, our chefs have honoured
+traditional Telugu recipes while embracing the finest local produce. Every dish on our menu is a bridge
+between the comfort of home cooking and the richness of Telangana's culinary heritage.
         </p>
         <div class="about-stats reveal reveal-delay-2">
           <div class="stat">
@@ -470,7 +485,7 @@
   <section id="contact">
     <div class="contact-header">
       <div class="section-label">Find Us</div>
-      <h2 class="section-title">Visit <em>SITHARA</em></h2>
+      <h2 class="section-title">Visit <em>ABHIRUCHI</em></h2>
     </div>
     <div class="footer-grid">
       <!-- Col 1: Hours -->
@@ -496,7 +511,7 @@
           </iframe>
         </div>
         <p class="address-line">
-          <strong>Sithara Restaurant</strong>
+          <strong>Abhiruchi Restaurant</strong>
           near Gandhi Statue, Raikal<br />
           Jagtial, Telangana – 505460
         </p>
@@ -505,13 +520,13 @@
       <div class="reveal reveal-delay-2">
         <div class="footer-col-title">Get in Touch</div>
         <div class="contact-info">
-          <a href="tel:+914023456789">
+          <a href="tel:+919381554414">
             <span class="contact-icon">📞</span>
-            +91 40 2345 6789
+            +919381554414
           </a>
-          <a href="mailto:Sithara@gmail.com">
+          <a href="mailto:Abhiruchi@gmail.com">
             <span class="contact-icon">✉️</span>
-            Sithara@gmail.com
+            Abhiruchi@gmail.com
           </a>
           <a href="#" onclick="openModal(); return false;">
             <span class="contact-icon">🗓️</span>
@@ -529,7 +544,7 @@
     </div>
     <!-- FIX 24: Updated copyright year from 2025 to 2026 to match "Est. 2026" -->
     <div class="footer-bottom">
-      <p>© 2026 Sithara Restaurant. All rights reserved.</p>
+      <p>© 2026 Abhiruchi Restaurant. All rights reserved.</p>
       <p>Designed with ♥ · <a href="#">Privacy Policy</a></p>
     </div>
   </section>
@@ -650,7 +665,7 @@
         links.style.top = '70px';
         links.style.left = '0';
         links.style.right = '0';
-        links.style.background = 'rgba(214,226,186,0.97)';
+        links.style.background = 'rgba(214,226,186,0.98)';
         links.style.padding = '20px 30px';
         links.style.gap = '20px';
         links.style.backdropFilter = 'blur(12px)';
